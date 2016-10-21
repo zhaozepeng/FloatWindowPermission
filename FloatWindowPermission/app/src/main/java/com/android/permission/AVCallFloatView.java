@@ -3,9 +3,7 @@
  */
 package com.android.permission;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Point;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,19 +12,11 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import com.facishare.fs.common_utils.FSScreen;
-import com.facishare.fs.pluginapi.HostInterfaceManager;
-import com.fxiaoke.plugin.avcall.R;
-import com.fxiaoke.plugin.avcall.common.utils.AVLogUtils;
-import com.fxiaoke.plugin.avcall.common.utils.CommonUtils;
-import com.fxiaoke.plugin.avcall.ui.AVActivity;
+import com.android.floatwindowpermission.R;
 
 /**
  * Description:
@@ -68,17 +58,9 @@ public class AVCallFloatView extends FrameLayout {
 
     private boolean isAnchoring = false;
     private boolean isShowing = false;
-
-    private View floatView = null;
-    private ImageView avcall_phone_a;
-    private ImageView avcall_phone_b;
-    private ImageView avcall_phone_c;
-    private TextView tv_call_time = null;
     private WindowManager windowManager = null;
     private WindowManager.LayoutParams mParams = null;
 
-    private AnimationSet alphaAnimation = null;
-    private boolean isFloatClick = false;
 
     public AVCallFloatView(Context context) {
         super(context);
@@ -86,67 +68,16 @@ public class AVCallFloatView extends FrameLayout {
     }
 
     private void initView() {
-        windowManager = (WindowManager) HostInterfaceManager.getHostInterface().getApp()
-                .getSystemService(Context.WINDOW_SERVICE);
+        windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        floatView = inflater.inflate(R.layout.float_window_layout, null);
-        tv_call_time = (TextView) floatView.findViewById(R.id.tv_call_time);
-        avcall_phone_a = (ImageView) floatView.findViewById(R.id.avcall_phone_a);
-        avcall_phone_b = (ImageView) floatView.findViewById(R.id.avcall_phone_b);
-        avcall_phone_c = (ImageView) floatView.findViewById(R.id.avcall_phone_c);
-
-        alphaAnimation = (AnimationSet) AnimationUtils.loadAnimation(getContext(), R.anim.avcall_phone_alpha);
-        alphaAnimation.setRepeatCount(-1000);
-        alphaAnimation.setFillAfter(true);
-        runAlphaAnimation();
-        isFloatClick = false;
+        View floatView = inflater.inflate(R.layout.float_window_layout, null);
 
         addView(floatView);
 
     }
 
-    private void runAlphaAnimation() {
-        final int per_delay = 334;
-        avcall_phone_a.postDelayed(new AlphaAnimationRunnable(avcall_phone_a), per_delay);
-        avcall_phone_b.postDelayed(new AlphaAnimationRunnable(avcall_phone_b), per_delay * 3);
-        avcall_phone_c.postDelayed(new AlphaAnimationRunnable(avcall_phone_c), per_delay * 5);
-    }
-
-    private void alphaAnimator(View view) {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "alpha", 0, 1, 1, 1, 0, 0, 0);
-        animator.setDuration(2000);
-        animator.setRepeatCount(-1);
-        animator.start();
-    }
-
-    private class AlphaAnimationRunnable implements Runnable {
-        private View v;
-
-        public AlphaAnimationRunnable(View v) {
-            this.v = v;
-        }
-
-        @Override
-        public void run() {
-            alphaAnimator(v);
-        }
-    }
-
     public void setParams(WindowManager.LayoutParams params) {
         mParams = params;
-    }
-
-    public void setTime(long time) {
-        if (!isShowing) {
-            AVLogUtils.e(TAG, "window has been removed, can not be update");
-            return;
-        }
-        if (time <= 0) {
-            tv_call_time.setText(getContext().getString(R.string.fav_float_window_disconnect));
-        } else {
-            tv_call_time.setText(CommonUtils.getTalkTimeString(time));
-        }
-        windowManager.updateViewLayout(this, mParams);
     }
 
     public void setIsShowing(boolean isShowing) {
@@ -175,13 +106,9 @@ public class AVCallFloatView extends FrameLayout {
                 break;
             case MotionEvent.ACTION_UP:
                 if (Math.abs(xDownInScreen - xInScreen) <= ViewConfiguration.get(getContext()).getScaledTouchSlop()
-                        && Math.abs(yDownInScreen - yInScreen) <= ViewConfiguration.get(getContext()).getScaledTouchSlop()
-                        && !isFloatClick) {
+                        && Math.abs(yDownInScreen - yInScreen) <= ViewConfiguration.get(getContext()).getScaledTouchSlop()) {
                     // 点击效果
-                    AVLogUtils.e(TAG, "float window click");
-                    isFloatClick = true;
-                    Intent intent = new Intent(getContext(), AVActivity.class);
-                    HostInterfaceManager.getAVNotification().floatViewClick(getContext(), intent);
+                    Toast.makeText(getContext(), "this float window is clicked", Toast.LENGTH_SHORT).show();
                 } else {
                     //吸附效果
                     anchorToSide();
@@ -206,7 +133,7 @@ public class AVCallFloatView extends FrameLayout {
         int xDistance = 0;
         int yDistance = 0;
 
-        int dp_25 = FSScreen.dp2px(getContext(), 15);
+        int dp_25 = dp2px(15);
 
         //1
         if (middleX <= dp_25 + getWidth() / 2) {
@@ -217,7 +144,7 @@ public class AVCallFloatView extends FrameLayout {
             xDistance = dp_25 - mParams.x;
         }
         //3
-        else if (middleX >= screenWidth - getWidth() / 2 - FSScreen.dp2px(getContext(), 25)) {
+        else if (middleX >= screenWidth - getWidth() / 2 - dp2px(25)) {
             xDistance = screenWidth - mParams.x - getWidth() - dp_25;
         }
         //4
@@ -238,6 +165,11 @@ public class AVCallFloatView extends FrameLayout {
         animTime = Math.abs(xDistance) > Math.abs(yDistance) ? (int) (((float) xDistance / (float) screenWidth) * 600f)
                 : (int) (((float) yDistance / (float) screenHeight) * 900f);
         this.post(new AnchorAnimRunnable(Math.abs(animTime), xDistance, yDistance, System.currentTimeMillis()));
+    }
+
+    public int dp2px(float dp){
+        final float scale = getContext().getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
     }
 
     private class AnchorAnimRunnable implements Runnable {

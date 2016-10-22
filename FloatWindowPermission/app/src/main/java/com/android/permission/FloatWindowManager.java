@@ -63,15 +63,17 @@ public class FloatWindowManager {
     }
 
     private boolean checkPermission(Context context) {
-        if (RomUtils.checkIsMiuiRom()) {
-            return miuiPermissionCheck(context);
-        } else if (RomUtils.checkIsMeizuRom()) {
-            return meizuPermissionCheck(context);
-        } else if (RomUtils.checkIsHuaweiRom()) {
-            return huaweiPermissionCheck(context);
-        } else {
-            return commonROMPermissionCheck(context);
+        //6.0 版本之后由于 google 增加了对悬浮窗权限的管理，所以方式就统一了
+        if (Build.VERSION.SDK_INT < 23) {
+            if (RomUtils.checkIsMiuiRom()) {
+                return miuiPermissionCheck(context);
+            } else if (RomUtils.checkIsMeizuRom()) {
+                return meizuPermissionCheck(context);
+            } else if (RomUtils.checkIsHuaweiRom()) {
+                return huaweiPermissionCheck(context);
+            }
         }
+        return commonROMPermissionCheck(context);
     }
 
     private boolean huaweiPermissionCheck(Context context) {
@@ -101,17 +103,18 @@ public class FloatWindowManager {
     }
 
     private void applyPermission(Context context) {
-        if (RomUtils.checkIsMiuiRom()) {
-            miuiROMPermissionApply(context);
-        } else if (RomUtils.checkIsMeizuRom()) {
-            meizuROMPermissionApply(context);
-        } else if (RomUtils.checkIsHuaweiRom()) {
-            huaweiROMPermissionApply(context);
-        } else if (RomUtils.checkIs360Rom()) {
-            ROM360PermissionApply(context);
-        } else {
-            commonROMPermissionApply(context);
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (RomUtils.checkIsMiuiRom()) {
+                miuiROMPermissionApply(context);
+            } else if (RomUtils.checkIsMeizuRom()) {
+                meizuROMPermissionApply(context);
+            } else if (RomUtils.checkIsHuaweiRom()) {
+                huaweiROMPermissionApply(context);
+            } else if (RomUtils.checkIs360Rom()) {
+                ROM360PermissionApply(context);
+            }
         }
+        commonROMPermissionApply(context);
     }
 
     private void ROM360PermissionApply(final Context context) {
@@ -180,7 +183,8 @@ public class FloatWindowManager {
                             Field field = clazz.getDeclaredField("ACTION_MANAGE_OVERLAY_PERMISSION");
 
                             Intent intent = new Intent(field.get(null).toString());
-                            intent.setData(Uri.parse("package:" + context));
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.setData(Uri.parse("package:" + context.getPackageName()));
                             context.startActivity(intent);
                         } catch (Exception e) {
                             Log.e(TAG, Log.getStackTraceString(e));

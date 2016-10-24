@@ -6,6 +6,7 @@ package com.android.permission.rom;
 import android.annotation.TargetApi;
 import android.app.AppOpsManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
 import android.util.Log;
@@ -42,5 +43,15 @@ public class QikuUtils {
             Log.e("", "Below API 19 cannot invoke!");
         }
         return false;
+    }
+
+    /**
+     * 去华为权限申请页面
+     */
+    public static void applyPermission(Context context) {
+        Intent intent = new Intent();
+        intent.setClassName("com.android.settings", "com.android.settings.Settings$OverlaySettingsActivity");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 }

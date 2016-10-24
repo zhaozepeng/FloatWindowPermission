@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import com.android.permission.rom.HuaweiUtils;
 import com.android.permission.rom.MeizuUtils;
 import com.android.permission.rom.MiuiUtils;
+import com.android.permission.rom.QikuUtils;
 import com.android.permission.rom.RomUtils;
 
 import java.lang.reflect.Field;
@@ -71,6 +72,8 @@ public class FloatWindowManager {
                 return meizuPermissionCheck(context);
             } else if (RomUtils.checkIsHuaweiRom()) {
                 return huaweiPermissionCheck(context);
+            } else if (RomUtils.checkIs360Rom()) {
+                return qikuPermissionCheck(context);
             }
         }
         return commonROMPermissionCheck(context);
@@ -86,6 +89,10 @@ public class FloatWindowManager {
 
     private boolean meizuPermissionCheck(Context context) {
         return MeizuUtils.checkFloatWindowPermission(context);
+    }
+
+    private boolean qikuPermissionCheck(Context context) {
+        return QikuUtils.checkFloatWindowPermission(context);
     }
 
     private boolean commonROMPermissionCheck(Context context) {
@@ -122,7 +129,7 @@ public class FloatWindowManager {
             @Override
             public void confirmResult(boolean confirm) {
                 if (confirm) {
-                    HuaweiUtils.applyPermission(context);
+                    QikuUtils.applyPermission(context);
                 } else {
                     Log.e(TAG, "ROM:360, user manually refuse OVERLAY_PERMISSION");
                 }

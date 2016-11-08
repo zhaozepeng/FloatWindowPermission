@@ -46,7 +46,7 @@ public class QikuUtils {
     }
 
     /**
-     * 去华为权限申请页面
+     * 去360权限申请页面
      */
     public static void applyPermission(Context context) {
         Intent intent = new Intent();

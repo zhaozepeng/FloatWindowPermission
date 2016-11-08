@@ -84,7 +84,9 @@ public class MiuiUtils {
             goToMiuiPermissionActivity_V6(context);
         } else if (versionCode == 7) {
             goToMiuiPermissionActivity_V7(context);
-        } else {
+        } else if (versionCode == 8) {
+            goToMiuiPermissionActivity_V8(context);
+        }else {
             Log.e(TAG, "this is a special MIUI rom version, its version code " + versionCode);
         }
     }
@@ -153,6 +155,22 @@ public class MiuiUtils {
     public static void goToMiuiPermissionActivity_V7(Context context) {
         Intent intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
         intent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.AppPermissionsEditorActivity");
+        intent.putExtra("extra_pkgname", context.getPackageName());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        if (isIntentAvailable(intent, context)) {
+            context.startActivity(intent);
+        } else {
+            Log.e(TAG, "Intent is not available!");
+        }
+    }
+
+    /**
+     * 小米 V8 版本 ROM权限申请
+     */
+    public static void goToMiuiPermissionActivity_V8(Context context) {
+        Intent intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
+        intent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.PermissionsEditorActivity");
         intent.putExtra("extra_pkgname", context.getPackageName());
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 

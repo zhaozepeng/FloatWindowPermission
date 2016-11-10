@@ -63,7 +63,7 @@ public class MiuiUtils {
             try {
                 Class clazz = AppOpsManager.class;
                 Method method = clazz.getDeclaredMethod("checkOp", int.class, int.class, String.class);
-                return AppOpsManager.MODE_ALLOWED == (int)method.invoke(manager, op, Binder.getCallingUid(), context.getPackageName());
+                return AppOpsManager.MODE_ALLOWED == (int) method.invoke(manager, op, Binder.getCallingUid(), context.getPackageName());
             } catch (Exception e) {
                 Log.e(TAG, Log.getStackTraceString(e));
             }
@@ -86,7 +86,7 @@ public class MiuiUtils {
             goToMiuiPermissionActivity_V7(context);
         } else if (versionCode == 8) {
             goToMiuiPermissionActivity_V8(context);
-        }else {
+        } else {
             Log.e(TAG, "this is a special MIUI rom version, its version code " + versionCode);
         }
     }
@@ -105,7 +105,7 @@ public class MiuiUtils {
         Intent intent = null;
         String packageName = context.getPackageName();
         intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package" , packageName, null);
+        Uri uri = Uri.fromParts("package", packageName, null);
         intent.setData(uri);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (isIntentAvailable(intent, context)) {
@@ -177,7 +177,16 @@ public class MiuiUtils {
         if (isIntentAvailable(intent, context)) {
             context.startActivity(intent);
         } else {
-            Log.e(TAG, "Intent is not available!");
+            intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
+            intent.setPackage("com.miui.securitycenter");
+            intent.putExtra("extra_pkgname", context.getPackageName());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            
+            if (isIntentAvailable(intent, context)) {
+                context.startActivity(intent);
+            } else {
+                Log.e(TAG, "Intent is not available!");
+            }
         }
     }
 }

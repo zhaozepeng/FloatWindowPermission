@@ -171,6 +171,7 @@ public class MiuiUtils {
     public static void goToMiuiPermissionActivity_V8(Context context) {
         Intent intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
         intent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.PermissionsEditorActivity");
+//        intent.setPackage("com.miui.securitycenter");
         intent.putExtra("extra_pkgname", context.getPackageName());
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 

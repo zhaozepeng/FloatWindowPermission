@@ -16,7 +16,7 @@ import com.android.permission.FloatWindowManager;
  * @since 2016-10-17
  */
 
-public class FloatWindowActivity extends Activity{
+public class FloatWindowActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

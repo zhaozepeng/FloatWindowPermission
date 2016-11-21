@@ -16,7 +16,7 @@ most models are OK with this way of adaption except meizu:
 ![这里写图片描述](http://img.blog.csdn.net/20161120151457025)
 conclusion:
 ![这里写图片描述](http://img.blog.csdn.net/20161120151836631)
-waiting for adapted...</br>
+<font color='red'>until now(2016-11-21), this problem has been solved, we have made a special treatment to the ROM above 6.0 inclue 6.0 in meizu mobiles.</font></br>
 ##**huawei**##
 here is the test result for huawei mobiles:
 ![这里写图片描述](http://img.blog.csdn.net/20161120152448539)

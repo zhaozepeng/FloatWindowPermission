@@ -96,17 +96,22 @@ public class FloatWindowManager {
     }
 
     private boolean commonROMPermissionCheck(Context context) {
-        Boolean result = true;
-        if (Build.VERSION.SDK_INT >= 23) {
-            try {
-                Class clazz = Settings.class;
-                Method canDrawOverlays = clazz.getDeclaredMethod("canDrawOverlays", Context.class);
-                result = (Boolean) canDrawOverlays.invoke(null, context);
-            } catch (Exception e) {
-                Log.e(TAG, Log.getStackTraceString(e));
+        //最新发现魅族6.0的系统这种方式不好用，天杀的，只有你是奇葩，没办法，单独适配一下
+        if (RomUtils.checkIsMeizuRom()) {
+            return meizuPermissionCheck(context);
+        } else {
+            Boolean result = true;
+            if (Build.VERSION.SDK_INT >= 23) {
+                try {
+                    Class clazz = Settings.class;
+                    Method canDrawOverlays = clazz.getDeclaredMethod("canDrawOverlays", Context.class);
+                    result = (Boolean) canDrawOverlays.invoke(null, context);
+                } catch (Exception e) {
+                    Log.e(TAG, Log.getStackTraceString(e));
+                }
             }
+            return result;
         }
-        return result;
     }
 
     private void applyPermission(Context context) {
@@ -180,28 +185,33 @@ public class FloatWindowManager {
      * 通用 rom 权限申请
      */
     private void commonROMPermissionApply(final Context context) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            showConfirmDialog(context, new OnConfirmResult() {
-                @Override
-                public void confirmResult(boolean confirm) {
-                    if (confirm) {
-                        try {
-                            Class clazz = Settings.class;
-                            Field field = clazz.getDeclaredField("ACTION_MANAGE_OVERLAY_PERMISSION");
+        //这里也一样，魅族系统需要单独适配
+        if (RomUtils.checkIsMeizuRom()) {
+            meizuROMPermissionApply(context);
+        } else {
+            if (Build.VERSION.SDK_INT >= 23) {
+                showConfirmDialog(context, new OnConfirmResult() {
+                    @Override
+                    public void confirmResult(boolean confirm) {
+                        if (confirm) {
+                            try {
+                                Class clazz = Settings.class;
+                                Field field = clazz.getDeclaredField("ACTION_MANAGE_OVERLAY_PERMISSION");
 
-                            Intent intent = new Intent(field.get(null).toString());
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.setData(Uri.parse("package:" + context.getPackageName()));
-                            context.startActivity(intent);
-                        } catch (Exception e) {
-                            Log.e(TAG, Log.getStackTraceString(e));
+                                Intent intent = new Intent(field.get(null).toString());
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.setData(Uri.parse("package:" + context.getPackageName()));
+                                context.startActivity(intent);
+                            } catch (Exception e) {
+                                Log.e(TAG, Log.getStackTraceString(e));
+                            }
+                        } else {
+                            Log.d(TAG, "user manually refuse OVERLAY_PERMISSION");
+                            //需要做统计效果
                         }
-                    } else {
-                        Log.d(TAG, "user manually refuse OVERLAY_PERMISSION");
-                        //需要做统计效果
                     }
-                }
-            });
+                });
+            }
         }
     }
 

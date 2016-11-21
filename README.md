@@ -1,6 +1,9 @@
 # FloatWindowPermission
 this repository is aimed to adapt android float window permission in most of phone models and how to request it at runtime </br>
 
+its result is as follows : </br>
+![这里写图片描述](http://img.blog.csdn.net/20161121163115438)
+
 if you want to see more,[click here](http://blog.csdn.net/self_study/article/details/52859790)
 
 from now on，the models below android M that have been adapted are :

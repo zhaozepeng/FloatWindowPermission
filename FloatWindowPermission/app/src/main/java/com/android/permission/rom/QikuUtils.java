@@ -7,6 +7,7 @@ import android.annotation.TargetApi;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.Build;
 import android.util.Log;
@@ -52,6 +53,18 @@ public class QikuUtils {
         Intent intent = new Intent();
         intent.setClassName("com.android.settings", "com.android.settings.Settings$OverlaySettingsActivity");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        if (isIntentAvailable(intent, context)) {
+            context.startActivity(intent);
+        } else {
+            Log.e(TAG, "can't open permission page with Settings$OverlaySettingsActivity, please use " +
+                    "\"adb shell dumpsys activity\" command and tell me the name of the float window permission page");
+        }
+    }
+
+    private static boolean isIntentAvailable(Intent intent, Context context) {
+        if (intent == null) {
+            return false;
+        }
+        return context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
     }
 }

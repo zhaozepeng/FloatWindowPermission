@@ -56,8 +56,13 @@ public class QikuUtils {
         if (isIntentAvailable(intent, context)) {
             context.startActivity(intent);
         } else {
-            Log.e(TAG, "can't open permission page with Settings$OverlaySettingsActivity, please use " +
-                    "\"adb shell dumpsys activity\" command and tell me the name of the float window permission page");
+            intent.setClassName("com.qihoo360.mobilesafe", "com.qihoo360.mobilesafe.ui.index.appEnterActivity");
+            if (isIntentAvailable(intent, context)) {
+                context.startActivity(intent);
+            } else {
+                Log.e(TAG, "can't open permission page, please use " +
+                        "\"adb shell dumpsys activity\" command and tell me the name of the float window permission page");
+            }
         }
     }
 

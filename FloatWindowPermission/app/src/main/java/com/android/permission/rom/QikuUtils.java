@@ -60,7 +60,7 @@ public class QikuUtils {
             if (isIntentAvailable(intent, context)) {
                 context.startActivity(intent);
             } else {
-                Log.e(TAG, "can't open permission page, please use " +
+                Log.e(TAG, "can't open permission page with particular name, please use " +
                         "\"adb shell dumpsys activity\" command and tell me the name of the float window permission page");
             }
         }

@@ -56,7 +56,7 @@ public class QikuUtils {
         if (isIntentAvailable(intent, context)) {
             context.startActivity(intent);
         } else {
-            intent.setClassName("com.qihoo360.mobilesafe", "com.qihoo360.mobilesafe.ui.index.appEnterActivity");
+            intent.setClassName("com.qihoo360.mobilesafe", "com.qihoo360.mobilesafe.ui.index.AppEnterActivity");
             if (isIntentAvailable(intent, context)) {
                 context.startActivity(intent);
             } else {

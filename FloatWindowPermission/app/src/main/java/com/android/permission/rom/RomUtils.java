@@ -98,6 +98,8 @@ public class RomUtils {
     }
 
     public static boolean checkIs360Rom() {
-        return Build.MANUFACTURER.contains("QiKU");
+        //fix issue https://github.com/zhaozepeng/FloatWindowPermission/issues/9
+        return Build.MANUFACTURER.contains("QiKU")
+                || Build.MANUFACTURER.contains("360");
     }
 }

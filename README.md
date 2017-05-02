@@ -10,7 +10,7 @@ from now on，the models below android M that have been adapted are :
 <ul><li>xiaomi:v5,v6,v7,v8</li><li>huawei:partial</li><li>meizu:partial</li><li>360:partial</li><li>others:phones like samsung,sony or other model can directly show the float window, so there is no need to adapt,but if you find one that can not,contact me via my email(zhao_zepeng@hotmail.com) or leave a message on my blog i mentioned above,thanks</li></ul>
 
 more details about the models that have been adapted(thanks [ruanqin0706](https://github.com/ruanqin0706) for help):</br>
-##**6.0/6.0+**##
+## **6.0/6.0+**##
 most models are OK with this way of adaption except meizu:
 
 | 机型      | 版本   |详细信息| 适配完成 |具体表现|
@@ -30,7 +30,8 @@ conclusion:
 |其他：20款，均正常|
 
 <font color='red'>until now(2016-11-21), this problem has been solved, we have made a special treatment to the ROM above 6.0 include 6.0 in meizu mobiles.</font></br>
-##**huawei**##
+
+## **huawei**##
 here is the test result for huawei mobiles:
 
 | 机型      | 版本   | 适配完成 |具体表现|默认设置|
@@ -47,7 +48,8 @@ conclusion:
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 |华为6.0以下机型覆盖：18款，其中：<br>5.0.1以上：11款，均默认开启，且跳转设置页面正确；5.0：1款，处理异常<br>（默认未开启悬浮窗权限，且点击跳转至通知栏，非悬浮窗设置入口）<br>4.4.4、4.4.2：3款，处理可接受<br>（默认未开启悬浮窗权限，点击跳转至通知中心的“通知栏”标签页，可手动切换至“悬浮窗”标签页设置）<br>4.3：1款，处理可接受<br>（默认开启，但点击华为跳转设置页，跳转至通知中心，无悬浮窗设置处）<br>4.2.2：1款，默认开启，处理正常<br>4.1.2：1款，处理有瑕疵<br>（默认开启，但若直接点击华为跳转按钮，出现闪退）|12 |5 |18 |94.44%|
 waiting for adapted...</br>
-##**xiaomi**##
+
+## **xiaomi**##
 most of xiaomi mobiles are adapted very well except some paticular models:</br>
 
 | 机型      | 版本   | 适配完成 |具体表现|
@@ -60,13 +62,15 @@ here is the conclusion:
 |汇总结果  |完全兼容机型数量 |次兼容机型数量 |总测试机型数|兼容成功率|
 | :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
 |小米6.0以下机型覆盖：10款，其中：<br>5.1.1 小米 MI 4S：1款，兼容失败<br>（默认未开启，点击小米手机授权按钮，无跳转）<br>其他：9款，均成功|9|0|10|90%|
-##**samsung**##
+
+## **samsung**##
 almost 100% of the samsung mobiles are adapted very well and here is the conclusion of samsung:
 
 |汇总结果  |完全兼容机型数量 |次兼容机型数量 |总测试机型数|兼容成功率|
 | :-------------: | :-------------: | :-------------: | :-------------: | :-------------: |
 |三星6.0以下机型覆盖：28款，全部检测处理成功<br>（默认均开启悬浮窗权限）|28|0|28|100%|
-##**oppo&&vivo**##
+
+## **oppo&&vivo**##
 only test a small part of the mobiles and here is the result:
 
 | 机型      | 版本   | 适配完成 |是否默认开启|
@@ -81,7 +85,8 @@ conclusion:</br>
 |汇总结果  |
 | ------------- | 
 |抽查3款，2个系统版本，均兼容，100%|</br>
-##**others**##
+
+## **others**##
 we random pick some other models like HTC and Sony and here is the result:
 
 |机型|是否正常|

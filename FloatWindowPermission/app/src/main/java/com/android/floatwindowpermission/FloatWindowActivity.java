@@ -3,8 +3,8 @@
  */
 package com.android.floatwindowpermission;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.android.permission.FloatWindowManager;
@@ -16,7 +16,7 @@ import com.android.permission.FloatWindowManager;
  * @since 2016-10-17
  */
 
-public class FloatWindowActivity extends Activity {
+public class FloatWindowActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

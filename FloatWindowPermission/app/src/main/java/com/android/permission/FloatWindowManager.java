@@ -4,13 +4,16 @@
 package com.android.permission;
 
 import android.app.AlertDialog;
+import android.app.AppOpsManager;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
@@ -109,6 +112,20 @@ public class FloatWindowManager {
                 } catch (Exception e) {
                     Log.e(TAG, Log.getStackTraceString(e));
                 }
+            }else{//add by kcq in 20180109 为适配oppo 6.0以下手机
+                if (Build.VERSION.SDK_INT >= 19) {
+                    AppOpsManager manager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+                    try {
+                        Class clazz = AppOpsManager.class;
+                        Method method = clazz.getDeclaredMethod("checkOp", int.class, int.class, String.class);
+                        //OP_SYSTEM_ALERT_WINDOW = 24;
+                        return AppOpsManager.MODE_ALLOWED == (int) method.invoke(manager, 24, Binder.getCallingUid(), context.getPackageName());
+                    } catch (Exception e) {
+                        Log.e(TAG, Log.getStackTraceString(e));
+                    }
+                } else {
+                    Log.e(TAG, "Below API 19 cannot invoke!");
+                }
             }
             return result;
         }
@@ -124,9 +141,33 @@ public class FloatWindowManager {
                 huaweiROMPermissionApply(context);
             } else if (RomUtils.checkIs360Rom()) {
                 ROM360PermissionApply(context);
+            } else if(RomUtils.checkIsOppoRom()){
+                oppoROMPermissionApply(context);
             }
+            else {
+                otherROMPermissionApply(context);
+            }
+        }else {
+            commonROMPermissionApply(context);
         }
-        commonROMPermissionApply(context);
+    }
+
+    private void oppoROMPermissionApply(Context context) {
+        try {
+            Intent intent = new Intent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //com.coloros.safecenter/.sysfloatwindow.FloatWindowListActivity
+            ComponentName comp = new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.sysfloatwindow.FloatWindowListActivity");//悬浮窗管理页面
+            intent.setComponent(comp);
+            context.startActivity(intent);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void otherROMPermissionApply(Context context) {
+        
     }
 
     private void ROM360PermissionApply(final Context context) {

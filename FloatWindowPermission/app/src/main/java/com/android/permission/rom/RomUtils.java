@@ -102,4 +102,10 @@ public class RomUtils {
         return Build.MANUFACTURER.contains("QiKU")
                 || Build.MANUFACTURER.contains("360");
     }
+
+    public static boolean checkIsOppoRom() {
+        String manufacturer = Build.MANUFACTURER;
+        Log.e("tag","Build.MANUFACTURER="+manufacturer + "  Build.BRAND="+Build.BRAND+ "  Build.PRODUCT="+Build.PRODUCT);
+        return Build.MANUFACTURER.contains("OPPO") || Build.MANUFACTURER.contains("VIVO");
+    }
 }

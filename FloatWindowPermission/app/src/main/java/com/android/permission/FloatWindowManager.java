@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import com.android.permission.rom.HuaweiUtils;
 import com.android.permission.rom.MeizuUtils;
 import com.android.permission.rom.MiuiUtils;
+import com.android.permission.rom.OppoUtils;
 import com.android.permission.rom.QikuUtils;
 import com.android.permission.rom.RomUtils;
 
@@ -74,6 +75,8 @@ public class FloatWindowManager {
                 return huaweiPermissionCheck(context);
             } else if (RomUtils.checkIs360Rom()) {
                 return qikuPermissionCheck(context);
+            } else if (RomUtils.checkIsOppoRom()) {
+                return oppoROMPermissionCheck(context);
             }
         }
         return commonROMPermissionCheck(context);
@@ -93,6 +96,10 @@ public class FloatWindowManager {
 
     private boolean qikuPermissionCheck(Context context) {
         return QikuUtils.checkFloatWindowPermission(context);
+    }
+
+    private boolean oppoROMPermissionCheck(Context context) {
+        return OppoUtils.checkFloatWindowPermission(context);
     }
 
     private boolean commonROMPermissionCheck(Context context) {
@@ -124,6 +131,8 @@ public class FloatWindowManager {
                 huaweiROMPermissionApply(context);
             } else if (RomUtils.checkIs360Rom()) {
                 ROM360PermissionApply(context);
+            } else if (RomUtils.checkIsOppoRom()) {
+                oppoROMPermissionApply(context);
             }
         }
         commonROMPermissionApply(context);
@@ -174,6 +183,19 @@ public class FloatWindowManager {
             public void confirmResult(boolean confirm) {
                 if (confirm) {
                     MiuiUtils.applyMiuiPermission(context);
+                } else {
+                    Log.e(TAG, "ROM:miui, user manually refuse OVERLAY_PERMISSION");
+                }
+            }
+        });
+    }
+
+    private void oppoROMPermissionApply(final Context context) {
+        showConfirmDialog(context, new OnConfirmResult() {
+            @Override
+            public void confirmResult(boolean confirm) {
+                if (confirm) {
+                    OppoUtils.applyOppoPermission(context);
                 } else {
                     Log.e(TAG, "ROM:miui, user manually refuse OVERLAY_PERMISSION");
                 }

@@ -102,4 +102,9 @@ public class RomUtils {
         return Build.MANUFACTURER.contains("QiKU")
                 || Build.MANUFACTURER.contains("360");
     }
+
+    public static boolean checkIsOppoRom() {
+        //https://github.com/zhaozepeng/FloatWindowPermission/pull/26
+        return Build.MANUFACTURER.contains("OPPO") || Build.MANUFACTURER.contains("oppo");
+    }
 }

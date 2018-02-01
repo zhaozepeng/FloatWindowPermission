@@ -3,6 +3,7 @@
  */
 package com.android.permission;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.AppOpsManager;
 import android.app.Dialog;
@@ -18,14 +19,12 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
-
 import com.android.permission.rom.HuaweiUtils;
 import com.android.permission.rom.MeizuUtils;
 import com.android.permission.rom.MiuiUtils;
 import com.android.permission.rom.OppoUtils;
 import com.android.permission.rom.QikuUtils;
 import com.android.permission.rom.RomUtils;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -67,41 +66,9 @@ public class FloatWindowManager {
     }
 
     private boolean checkPermission(Context context) {
-        //6.0 版本之后由于 google 增加了对悬浮窗权限的管理，所以方式就统一了
-        if (Build.VERSION.SDK_INT < 23) {
-            if (RomUtils.checkIsMiuiRom()) {
-                return miuiPermissionCheck(context);
-            } else if (RomUtils.checkIsMeizuRom()) {
-                return meizuPermissionCheck(context);
-            } else if (RomUtils.checkIsHuaweiRom()) {
-                return huaweiPermissionCheck(context);
-            } else if (RomUtils.checkIs360Rom()) {
-                return qikuPermissionCheck(context);
-            }
-        }
-        return commonROMPermissionCheck(context);
-    }
-
-    private boolean huaweiPermissionCheck(Context context) {
-        return HuaweiUtils.checkFloatWindowPermission(context);
-    }
-
-    private boolean miuiPermissionCheck(Context context) {
-        return MiuiUtils.checkFloatWindowPermission(context);
-    }
-
-    private boolean meizuPermissionCheck(Context context) {
-        return MeizuUtils.checkFloatWindowPermission(context);
-    }
-
-    private boolean qikuPermissionCheck(Context context) {
-        return QikuUtils.checkFloatWindowPermission(context);
-    }
-
-    private boolean commonROMPermissionCheck(Context context) {
         //最新发现魅族6.0的系统这种方式不好用，天杀的，只有你是奇葩，没办法，单独适配一下
         if (RomUtils.checkIsMeizuRom()) {
-            return meizuPermissionCheck(context);
+            return checkOp(context);
         } else {
             Boolean result = true;
             if (Build.VERSION.SDK_INT >= 23) {
@@ -112,23 +79,34 @@ public class FloatWindowManager {
                 } catch (Exception e) {
                     Log.e(TAG, Log.getStackTraceString(e));
                 }
-            }else{//add by kcq in 20180109 为适配6.0以下手机(如oppo R9)
-                if (Build.VERSION.SDK_INT >= 19) {
-                    AppOpsManager manager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-                    try {
-                        Class clazz = AppOpsManager.class;
-                        Method method = clazz.getDeclaredMethod("checkOp", int.class, int.class, String.class);
-                        //OP_SYSTEM_ALERT_WINDOW = 24;
-                        return AppOpsManager.MODE_ALLOWED == (int) method.invoke(manager, 24, Binder.getCallingUid(), context.getPackageName());
-                    } catch (Exception e) {
-                        Log.e(TAG, Log.getStackTraceString(e));
-                    }
-                } else {
-                    Log.e(TAG, "Below API 19 cannot invoke!");
-                }
+            }else{
+                checkOp(context);
             }
             return result;
         }
+    }
+
+    /**
+     * 5.0~6.0权限检测
+     * @param context
+     * @return
+     */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private static boolean checkOp(Context context) {
+        final int version = Build.VERSION.SDK_INT;
+        if (version >= 19) {
+            AppOpsManager manager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+            try {
+                Class clazz = AppOpsManager.class;
+                Method method = clazz.getDeclaredMethod("checkOp", int.class, int.class, String.class);
+                return AppOpsManager.MODE_ALLOWED == (int)method.invoke(manager, 24, Binder.getCallingUid(), context.getPackageName());
+            } catch (Exception e) {
+                Log.e(TAG, Log.getStackTraceString(e));
+            }
+        } else {
+            Log.e("", "Below API 19 cannot invoke!");
+        }
+        return false;
     }
 
     private void applyPermission(Context context) {

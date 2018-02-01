@@ -6,7 +6,6 @@ package com.android.permission;
 import android.app.AlertDialog;
 import android.app.AppOpsManager;
 import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +22,7 @@ import android.view.WindowManager;
 import com.android.permission.rom.HuaweiUtils;
 import com.android.permission.rom.MeizuUtils;
 import com.android.permission.rom.MiuiUtils;
+import com.android.permission.rom.OppoUtils;
 import com.android.permission.rom.QikuUtils;
 import com.android.permission.rom.RomUtils;
 
@@ -112,7 +112,7 @@ public class FloatWindowManager {
                 } catch (Exception e) {
                     Log.e(TAG, Log.getStackTraceString(e));
                 }
-            }else{//add by kcq in 20180109 为适配oppo 6.0以下手机
+            }else{//add by kcq in 20180109 为适配6.0以下手机(如oppo R9)
                 if (Build.VERSION.SDK_INT >= 19) {
                     AppOpsManager manager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
                     try {
@@ -152,18 +152,18 @@ public class FloatWindowManager {
         }
     }
 
-    private void oppoROMPermissionApply(Context context) {
-        try {
-            Intent intent = new Intent();
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            //com.coloros.safecenter/.sysfloatwindow.FloatWindowListActivity
-            ComponentName comp = new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.sysfloatwindow.FloatWindowListActivity");//悬浮窗管理页面
-            intent.setComponent(comp);
-            context.startActivity(intent);
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
+    private void oppoROMPermissionApply(final Context context) {
+
+        showConfirmDialog(context, new OnConfirmResult() {
+            @Override
+            public void confirmResult(boolean confirm) {
+                if (confirm) {
+                    OppoUtils.applyPermission(context);
+                } else {
+                    Log.e(TAG, "ROM:OPPO, user manually refuse OVERLAY_PERMISSION");
+                }
+            }
+        });
     }
 
     private void otherROMPermissionApply(Context context) {

@@ -80,7 +80,7 @@ public class FloatWindowManager {
                     Log.e(TAG, Log.getStackTraceString(e));
                 }
             }else{
-                checkOp(context);
+                return checkOp(context);
             }
             return result;
         }
@@ -106,7 +106,7 @@ public class FloatWindowManager {
         } else {
             Log.e("", "Below API 19 cannot invoke!");
         }
-        return false;
+        return true;
     }
 
     private void applyPermission(Context context) {

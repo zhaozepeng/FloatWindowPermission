@@ -217,13 +217,7 @@ public class FloatWindowManager {
                     public void confirmResult(boolean confirm) {
                         if (confirm) {
                             try {
-                                Class clazz = Settings.class;
-                                Field field = clazz.getDeclaredField("ACTION_MANAGE_OVERLAY_PERMISSION");
-
-                                Intent intent = new Intent(field.get(null).toString());
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.setData(Uri.parse("package:" + context.getPackageName()));
-                                context.startActivity(intent);
+                                commonROMPermissionApplyInternal(context);
                             } catch (Exception e) {
                                 Log.e(TAG, Log.getStackTraceString(e));
                             }
@@ -235,6 +229,16 @@ public class FloatWindowManager {
                 });
             }
         }
+    }
+
+    public static void commonROMPermissionApplyInternal(Context context) throws NoSuchFieldException, IllegalAccessException {
+        Class clazz = Settings.class;
+        Field field = clazz.getDeclaredField("ACTION_MANAGE_OVERLAY_PERMISSION");
+
+        Intent intent = new Intent(field.get(null).toString());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setData(Uri.parse("package:" + context.getPackageName()));
+        context.startActivity(intent);
     }
 
     private void showConfirmDialog(Context context, OnConfirmResult result) {

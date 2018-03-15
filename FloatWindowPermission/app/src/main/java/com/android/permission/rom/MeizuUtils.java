@@ -35,7 +35,7 @@ public class MeizuUtils {
     public static void applyPermission(Context context) {
         try {
             Intent intent = new Intent("com.meizu.safe.security.SHOW_APPSEC");
-            intent.setClassName("com.meizu.safe", "com.meizu.safe.security.AppSecActivity");
+//            intent.setClassName("com.meizu.safe", "com.meizu.safe.security.AppSecActivity");//remove this line code for fix flyme6.3
             intent.putExtra("packageName", context.getPackageName());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);

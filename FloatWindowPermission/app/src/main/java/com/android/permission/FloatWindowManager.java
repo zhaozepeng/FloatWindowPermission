@@ -134,8 +134,9 @@ public class FloatWindowManager {
             } else if (RomUtils.checkIsOppoRom()) {
                 oppoROMPermissionApply(context);
             }
+        } else {
+            commonROMPermissionApply(context);
         }
-        commonROMPermissionApply(context);
     }
 
     private void ROM360PermissionApply(final Context context) {

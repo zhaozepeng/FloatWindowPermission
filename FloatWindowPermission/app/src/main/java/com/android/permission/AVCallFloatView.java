@@ -144,7 +144,7 @@ public class AVCallFloatView extends FrameLayout {
             xDistance = dp_25 - mParams.x;
         }
         //3
-        else if (middleX >= screenWidth - getWidth() / 2 - dp2px(25)) {
+        else if (middleX >= screenWidth - getWidth() / 2 - dp_25) {
             xDistance = screenWidth - mParams.x - getWidth() - dp_25;
         }
         //4
@@ -195,6 +195,11 @@ public class AVCallFloatView extends FrameLayout {
         @Override
         public void run() {
             if (System.currentTimeMillis() >= currentStartTime + animTime) {
+                if (mParams.x != (startX + xDistance) || mParams.y != (startY + yDistance)) {
+                    mParams.x = startX + xDistance;
+                    mParams.y = startY + yDistance;
+                    windowManager.updateViewLayout(AVCallFloatView.this, mParams);
+                }
                 isAnchoring = false;
                 return;
             }
